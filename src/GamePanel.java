@@ -52,6 +52,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void updateGameState() {
+		if (!rocket.isActive) {
+			currentState = END;
+		}
 		manager.update();
 	}
 
@@ -74,8 +77,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (gotImage) {
 			g.drawImage(image, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
 		}
+		g.setColor(Color.WHITE);
+		g.drawString("current score: " + manager.getScore(), 10, 10);
 		manager.draw(g);
-
 	}
 
 	void drawEndState(Graphics g) {
@@ -88,6 +92,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("You killed enemies", 130, 300);
 		g.setFont(subTitleFont);
 		g.drawString("Press ENTER to restart", 100, 500);
+		g.drawString("your score: " + manager.getScore(), 200, 600);
 	}
 
 	void startGame() {
@@ -105,7 +110,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		} else if (currentState == END) {
 			updateEndState();
 		}
-		// System.out.println("action");
 		repaint();
 
 	}
@@ -122,6 +126,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (currentState == END) {
 				//alienSpawn.stop();
+				rocket = new Rocketship(250, 700, 50, 50);
+				manager = new ObjectManager(rocket);
 				currentState = MENU;
 			} else {
 				if (currentState == GAME) {
@@ -132,34 +138,28 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			System.out.println("UP");
 			rocket.up();
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			System.out.println("DOWN");
 			rocket.down();
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			System.out.println("LEFT");
 			rocket.left();
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			System.out.println("RIGHT");
 			rocket.right();
 		}
-
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			manager.addProjectile(rocket.getProjectile());
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			System.out.println("UP");
 			rocket.up();
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			System.out.println("DOWN");
 			rocket.down();
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			System.out.println("LEFT");
 			rocket.left();
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			System.out.println("RIGHT");
 			rocket.right();
 		}
 
